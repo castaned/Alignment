@@ -744,8 +744,12 @@ void MuonResidualsFitter::selectPeakResiduals_simple(double nsigma, int nvar, in
     std::cout<<" N residuals "<<nbefore<<" -> "<<(size_t) std::count(m_residuals_ok.begin(), m_residuals_ok.end(), true)<<std::endl;
 }
 
-void MuonResidualsFitter::fiducialCuts(double xMin, double xMax, double yMin, double yMax, bool fidcut1) {
+void MuonResidualsFitter::fiducialCuts(unsigned int idx,double xMin, double xMax, double yMin, double yMax, bool fidcut1) {
 
+  DetId id(idx);
+  if(id.subdetId() == MuonSubdetId::DT){
+    DTChamberId chamberId(id.rawId());
+  
     int iResidual = -1;
 
     int n_station=9999;
@@ -759,78 +763,83 @@ void MuonResidualsFitter::fiducialCuts(double xMin, double xMax, double yMin, do
     double chambl=9999.;
 
 
+    n_station = chamberId.station();
+    n_station = chamberId.ring_wheel();
+    n_station = chamberId.sector();
 
-    
-    for (std::vector<double*>::const_iterator r = residuals_begin();  r != residuals_end();  ++r) {
-        iResidual++;
-        if (!m_residuals_ok[iResidual]) continue;
-
-
-	if( (*r)[15]>0.0001 ) { // this value is greater than zero (chamber width) for 6DOFs stations 1,2,3 better to change for type()!!!
-	  
-          n_station = (*r)[12];
-          n_wheel   = (*r)[13];
-          n_sector  = (*r)[14];
-          positionX = (*r)[4];
-          positionY = (*r)[5];
-          chambw    = (*r)[15];
-          chambl    = (*r)[16];
-	}
-	else{                 // in case of 5DOF residual the residual object index is different
-	  n_station = (*r)[10];
-	  n_wheel   = (*r)[11];
-	  n_sector  = (*r)[12];
-	  positionX = (*r)[2];
-	  positionY = (*r)[3];
-	  chambw    = (*r)[13];
-	  chambl    = (*r)[14];
-	}
-	
-	
-        if(fidcut1){    // this is the standard fiducial cut used so far 80x80 cm in x,y
-          if (positionX >= xMax || positionX <= xMin)  m_residuals_ok[iResidual] = false;
-          if (positionY >= yMax || positionY <= yMin)  m_residuals_ok[iResidual] = false;
-        }
-	
-	
-	
-	// Implementation of new fiducial cut
-	
-        double dtrkchamx = (chambw/2.) - positionX;  // variables to cut tracks on the edge of the chambers
-        double dtrkchamy = (chambl/2.) - positionY; 
-	
-	
-        if(!fidcut1){
-	  
-
-          if(n_station==4){
-            if( (n_wheel==-1 && n_sector==3) || (n_wheel==1 && n_sector==4)){   // FOR SHORT CHAMBER LENGTH IN:  WHEEL 1 SECTOR 4  AND  WHEEL -1 SECTOR 3
-              if( (n_sector==1 || n_sector==2 || n_sector==3 || n_sector==5 || n_sector==6 || n_sector==7 || n_sector==8 || n_sector==12) && ( (dtrkchamx<40 || dtrkchamx>380) || (dtrkchamy<40.0 || dtrkchamy>170.0)) ) m_residuals_ok[iResidual] = false;
-              if( (n_sector==4  || n_sector==13)  && ( (dtrkchamx<40 || dtrkchamx>280) || (dtrkchamy<40.0 || dtrkchamy>170.0)) ) m_residuals_ok[iResidual] = false;
-              if( (n_sector==9  || n_sector==11)  && ( (dtrkchamx<40 || dtrkchamx>180) || (dtrkchamy<40.0 || dtrkchamy>170.0)) ) m_residuals_ok[iResidual] = false;
-              if( (n_sector==10 || n_sector==14)  && ( (dtrkchamx<40 || dtrkchamx>220) || (dtrkchamy<40.0 || dtrkchamy>170.0)) ) m_residuals_ok[iResidual] = false;
-            }
-            else{
-              if( (n_sector==1 || n_sector==2 || n_sector==3 || n_sector==5 || n_sector==6 || n_sector==7 || n_sector==8 || n_sector==12) && ( (dtrkchamx<40 || dtrkchamx>380) || (dtrkchamy<40.0 || dtrkchamy>210.0)) ) m_residuals_ok[iResidual] = false;
-              if( (n_sector==4  || n_sector==13)  && ( (dtrkchamx<40 || dtrkchamx>280) || (dtrkchamy<40.0 || dtrkchamy>210.0)) ) m_residuals_ok[iResidual] = false;
-              if( (n_sector==9  || n_sector==11)  && ( (dtrkchamx<40 || dtrkchamx>180) || (dtrkchamy<40.0 || dtrkchamy>210.0)) ) m_residuals_ok[iResidual] = false;
-              if( (n_sector==10 || n_sector==14)  && ( (dtrkchamx<40 || dtrkchamx>220) || (dtrkchamy<40.0 || dtrkchamy>210.0)) ) m_residuals_ok[iResidual] = false;
-            }
-          }
-          else{
-            if( (n_wheel==-1 && n_sector==3) || (n_wheel==1 && n_sector==4)){
-              if(n_station==1 && ( (dtrkchamx<30.0 || dtrkchamx>190.0) || (dtrkchamy<40.0 || dtrkchamy>170.0)) ) m_residuals_ok[iResidual] = false;
-              if(n_station==2 && ( (dtrkchamx<30.0 || dtrkchamx>240.0) || (dtrkchamy<40.0 || dtrkchamy>170.0)) ) m_residuals_ok[iResidual] = false;
-              if(n_station==3 && ( (dtrkchamx<30.0 || dtrkchamx>280.0) || (dtrkchamy<40.0 || dtrkchamy>170.0)) ) m_residuals_ok[iResidual] = false;
-            }
-            else{
-              if(n_station==1 && ( (dtrkchamx<30.0 || dtrkchamx>190.0) || (dtrkchamy<40.0 || dtrkchamy>210.0)) ) m_residuals_ok[iResidual] = false;
-              if(n_station==2 && ( (dtrkchamx<30.0 || dtrkchamx>240.0) || (dtrkchamy<40.0 || dtrkchamy>210.0)) ) m_residuals_ok[iResidual] = false;
-              if(n_station==3 && ( (dtrkchamx<30.0 || dtrkchamx>280.0) || (dtrkchamy<40.0 || dtrkchamy>210.0)) ) m_residuals_ok[iResidual] = false;
-	    }
-	  }
-	}
+    if(chamberID.station()==4){
+      chambw    = (*r)[15];
+      chambl    = (*r)[16];}
+    else{
+      chambw    = (*r)[13];
+      chambl    = (*r)[14];
     }
+
+    std::cout<<" station       "<<n_station<<std::endl;
+    std::cout<<" wheel         "<<n_wheel<<std::endl;
+    std::cout<<" sector        "<<n_sector<<std::endl;
+    std::cout<<" chamb width   "<<chambw<<std::endl;
+    std::cout<<" chamb length  "<<chambl<<std::endl;
+
+        
+    // for (std::vector<double*>::const_iterator r = residuals_begin();  r != residuals_end();  ++r) {
+    //   iResidual++;
+    //   if (!m_residuals_ok[iResidual]) continue;
+      
+      
+    //   if( chamberId.station()==4 ) { //  objects in residual for station4 is different w.r.t 1,2,3
+    // 	positionX = (*r)[4];
+    // 	positionY = (*r)[5];
+    //   }
+    //   else{             
+    // 	positionX = (*r)[2];
+    // 	positionY = (*r)[3];
+    //   }
+      
+    //   if(fidcut1){    // this is the standard fiducial cut used so far 80x80 cm in x,y
+    // 	if (positionX >= xMax || positionX <= xMin)  m_residuals_ok[iResidual] = false;
+    // 	if (positionY >= yMax || positionY <= yMin)  m_residuals_ok[iResidual] = false;
+    //   }
+	
+	
+	
+    // 	// Implementation of new fiducial cut
+	
+    //     double dtrkchamx = (chambw/2.) - positionX;  // variables to cut tracks on the edge of the chambers
+    //     double dtrkchamy = (chambl/2.) - positionY; 
+	
+	
+    //     if(!fidcut1){
+	  
+
+    //       if(n_station==4){
+    //         if( (n_wheel==-1 && n_sector==3) || (n_wheel==1 && n_sector==4)){   // FOR SHORT CHAMBER LENGTH IN:  WHEEL 1 SECTOR 4  AND  WHEEL -1 SECTOR 3
+    //           if( (n_sector==1 || n_sector==2 || n_sector==3 || n_sector==5 || n_sector==6 || n_sector==7 || n_sector==8 || n_sector==12) && ( (dtrkchamx<40 || dtrkchamx>380) || (dtrkchamy<40.0 || dtrkchamy>170.0)) ) m_residuals_ok[iResidual] = false;
+    //           if( (n_sector==4  || n_sector==13)  && ( (dtrkchamx<40 || dtrkchamx>280) || (dtrkchamy<40.0 || dtrkchamy>170.0)) ) m_residuals_ok[iResidual] = false;
+    //           if( (n_sector==9  || n_sector==11)  && ( (dtrkchamx<40 || dtrkchamx>180) || (dtrkchamy<40.0 || dtrkchamy>170.0)) ) m_residuals_ok[iResidual] = false;
+    //           if( (n_sector==10 || n_sector==14)  && ( (dtrkchamx<40 || dtrkchamx>220) || (dtrkchamy<40.0 || dtrkchamy>170.0)) ) m_residuals_ok[iResidual] = false;
+    //         }
+    //         else{
+    //           if( (n_sector==1 || n_sector==2 || n_sector==3 || n_sector==5 || n_sector==6 || n_sector==7 || n_sector==8 || n_sector==12) && ( (dtrkchamx<40 || dtrkchamx>380) || (dtrkchamy<40.0 || dtrkchamy>210.0)) ) m_residuals_ok[iResidual] = false;
+    //           if( (n_sector==4  || n_sector==13)  && ( (dtrkchamx<40 || dtrkchamx>280) || (dtrkchamy<40.0 || dtrkchamy>210.0)) ) m_residuals_ok[iResidual] = false;
+    //           if( (n_sector==9  || n_sector==11)  && ( (dtrkchamx<40 || dtrkchamx>180) || (dtrkchamy<40.0 || dtrkchamy>210.0)) ) m_residuals_ok[iResidual] = false;
+    //           if( (n_sector==10 || n_sector==14)  && ( (dtrkchamx<40 || dtrkchamx>220) || (dtrkchamy<40.0 || dtrkchamy>210.0)) ) m_residuals_ok[iResidual] = false;
+    //         }
+    //       }
+    //       else{
+    //         if( (n_wheel==-1 && n_sector==3) || (n_wheel==1 && n_sector==4)){
+    //           if(n_station==1 && ( (dtrkchamx<30.0 || dtrkchamx>190.0) || (dtrkchamy<40.0 || dtrkchamy>170.0)) ) m_residuals_ok[iResidual] = false;
+    //           if(n_station==2 && ( (dtrkchamx<30.0 || dtrkchamx>240.0) || (dtrkchamy<40.0 || dtrkchamy>170.0)) ) m_residuals_ok[iResidual] = false;
+    //           if(n_station==3 && ( (dtrkchamx<30.0 || dtrkchamx>280.0) || (dtrkchamy<40.0 || dtrkchamy>170.0)) ) m_residuals_ok[iResidual] = false;
+    //         }
+    //         else{
+    //           if(n_station==1 && ( (dtrkchamx<30.0 || dtrkchamx>190.0) || (dtrkchamy<40.0 || dtrkchamy>210.0)) ) m_residuals_ok[iResidual] = false;
+    //           if(n_station==2 && ( (dtrkchamx<30.0 || dtrkchamx>240.0) || (dtrkchamy<40.0 || dtrkchamy>210.0)) ) m_residuals_ok[iResidual] = false;
+    //           if(n_station==3 && ( (dtrkchamx<30.0 || dtrkchamx>280.0) || (dtrkchamy<40.0 || dtrkchamy>210.0)) ) m_residuals_ok[iResidual] = false;
+    // 	    }
+    // 	  }
+    // 	}
+  }
 
 }
 
