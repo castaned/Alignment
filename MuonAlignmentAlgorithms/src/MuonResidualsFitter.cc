@@ -744,7 +744,7 @@ void MuonResidualsFitter::selectPeakResiduals_simple(double nsigma, int nvar, in
     std::cout<<" N residuals "<<nbefore<<" -> "<<(size_t) std::count(m_residuals_ok.begin(), m_residuals_ok.end(), true)<<std::endl;
 }
 
-void MuonResidualsFitter::fiducialCuts(unsigned int idx,double xMin, double xMax, double yMin, double yMax, bool fidcut1) {
+void MuonResidualsFitter::fiducialCuts(unsigned int id,double xMin, double xMax, double yMin, double yMax, bool fidcut1) {
 
   DetId id(idx);
   if(id.subdetId() == MuonSubdetId::DT){
