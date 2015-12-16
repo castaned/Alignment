@@ -748,37 +748,37 @@ void MuonResidualsFitter::fiducialCuts(unsigned int idx, double xMin, double xMa
 
   DetId id(idx);
   if(id.subdetId() == MuonSubdetId::DT){
-    DTChamberId chamberId(id.rawId());
+    //    DTChamberId chamberId(id.rawId());
     
-    int iResidual = -1;
+    // int iResidual = -1;
     
-    int n_station=9999;
-    int n_wheel=9999;
-    int n_sector=9999;
+    // int n_station=9999;
+    // int n_wheel=9999;
+    // int n_sector=9999;
     
-    double positionX=9999.;
-    double positionY=9999.;
+    // double positionX=9999.;
+    // double positionY=9999.;
     
-    double chambw=9999.;
-    double chambl=9999.;
+    // double chambw=9999.;
+    // double chambl=9999.;
 
 
-    n_station = chamberId.station();
-    n_station = chamberId.ring_wheel();
-    n_station = chamberId.sector();
+    // n_station = chamberId.station();
+    // n_station = chamberId.ring_wheel();
+    // n_station = chamberId.sector();
 
-    if(chamberID.station()==4){
-      chambw    = (*r)[15];
-      chambl    = (*r)[16];}
-    else{
-      chambw    = (*r)[13];
-      chambl    = (*r)[14];
-    }
-    std::cout<<" station       "<<n_station<<std::endl;
-    std::cout<<" wheel         "<<n_wheel<<std::endl;
-    std::cout<<" sector        "<<n_sector<<std::endl;
-    std::cout<<" chamb width   "<<chambw<<std::endl;
-    std::cout<<" chamb length  "<<chambl<<std::endl;
+    // if(chamberID.station()==4){
+    //   chambw    = (*r)[15];
+    //   chambl    = (*r)[16];}
+    // else{
+    //   chambw    = (*r)[13];
+    //   chambl    = (*r)[14];
+    // }
+    // std::cout<<" station       "<<n_station<<std::endl;
+    // std::cout<<" wheel         "<<n_wheel<<std::endl;
+    // std::cout<<" sector        "<<n_sector<<std::endl;
+    // std::cout<<" chamb width   "<<chambw<<std::endl;
+    // std::cout<<" chamb length  "<<chambl<<std::endl;
 
         
     // for (std::vector<double*>::const_iterator r = residuals_begin();  r != residuals_end();  ++r) {
@@ -840,6 +840,7 @@ void MuonResidualsFitter::fiducialCuts(unsigned int idx, double xMin, double xMa
     // 	}
   }
 }
+  
 
 void MuonResidualsFitter::correctBField(int idx_momentum, int idx_q)
 {
