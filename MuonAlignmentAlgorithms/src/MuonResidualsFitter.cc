@@ -4,6 +4,7 @@
 #include "MuonResidualsFitter.h"
 #else
 #include "Alignment/MuonAlignmentAlgorithms/interface/MuonResidualsFitter.h"
+#include "DataFormats/DetId/interface/DetId.h"
 #endif
 
 #include <fstream>
