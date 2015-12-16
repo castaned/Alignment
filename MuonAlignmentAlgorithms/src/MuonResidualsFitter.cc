@@ -769,12 +769,11 @@ void MuonResidualsFitter::fiducialCuts(unsigned int idx, double xMin, double xMa
 
     if(chamberID.station()==4){
       chambw    = (*r)[15];
-      chambl    = (*r)[16];
+      chambl    = (*r)[16];}
     else{
       chambw    = (*r)[13];
       chambl    = (*r)[14];
     }
-
     std::cout<<" station       "<<n_station<<std::endl;
     std::cout<<" wheel         "<<n_wheel<<std::endl;
     std::cout<<" sector        "<<n_sector<<std::endl;
