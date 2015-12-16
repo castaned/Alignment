@@ -767,7 +767,7 @@ void MuonResidualsFitter::fiducialCuts(unsigned int idx, double xMin, double xMa
 
 
     n_station = chamberId.station();
-    n_station = chamberId.ring_wheel();
+    n_station = chamberId.wheel();
     n_station = chamberId.sector();
 
     std::cout<<" station       "<<n_station<<std::endl;
