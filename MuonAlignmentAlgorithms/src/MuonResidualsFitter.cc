@@ -759,8 +759,8 @@ void MuonResidualsFitter::fiducialCuts(unsigned int idx, double xMin, double xMa
     int n_wheel=9999;
     int n_sector=9999;
     
-    double positionX=9999.;
-    double positionY=9999.;
+    // double positionX=9999.;
+    // double positionY=9999.;
     
     double chambw=9999.;
     double chambl=9999.;
@@ -779,22 +779,22 @@ void MuonResidualsFitter::fiducialCuts(unsigned int idx, double xMin, double xMa
       iResidual++;
       if (!m_residuals_ok[iResidual]) continue;
       
-
-    if(chamberID.station()==4){
-      chambw    = (*r)[15];
-      chambl    = (*r)[16];}
-    else{
-      chambw    = (*r)[13];
-      chambl    = (*r)[14];
-    }      
-    std::cout<<" chamb width   "<<chambw<<std::endl;
-    std::cout<<" chamb length  "<<chambl<<std::endl;
-
-    //   if( chamberId.station()==4 ) { //  objects in residual for station4 is different w.r.t 1,2,3
-    // 	positionX = (*r)[4];
-    // 	positionY = (*r)[5];
-    //   }
-    //   else{             
+      
+      if(n_station==4){
+	chambw    = (*r)[15];
+	chambl    = (*r)[16];}
+      else{
+	chambw    = (*r)[13];
+	chambl    = (*r)[14];
+      }      
+      std::cout<<" chamb width   "<<chambw<<std::endl;
+      std::cout<<" chamb length  "<<chambl<<std::endl;
+      
+      //   if( chamberId.station()==4 ) { //  objects in residual for station4 is different w.r.t 1,2,3
+      // 	positionX = (*r)[4];
+      // 	positionY = (*r)[5];
+      //   }
+      //   else{             
     // 	positionX = (*r)[2];
     // 	positionY = (*r)[3];
     //   }
