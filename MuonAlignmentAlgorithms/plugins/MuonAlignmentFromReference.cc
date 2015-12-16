@@ -1502,7 +1502,7 @@ void MuonAlignmentFromReference::fiducialCuts()
     {
         if (m_debug) std::cout<<"applying fiducial cuts in "<<chamberPrettyNameFromId(*index)<<std::endl;
         MuonResidualsTwoBin *fitter = m_fitterOrder[*index];
-        fitter->fiducialCuts();
+        fitter->fiducialCuts(*index);
     }
 }
 
