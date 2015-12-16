@@ -744,14 +744,14 @@ void MuonResidualsFitter::selectPeakResiduals_simple(double nsigma, int nvar, in
     std::cout<<" N residuals "<<nbefore<<" -> "<<(size_t) std::count(m_residuals_ok.begin(), m_residuals_ok.end(), true)<<std::endl;
 }
 
-void MuonResidualsFitter::fiducialCuts(unsigned int id,double xMin, double xMax, double yMin, double yMax, bool fidcut1) {
+void MuonResidualsFitter::fiducialCuts(unsigned int idx, double xMin, double xMax, double yMin, double yMax, bool fidcut1) {
 
   DetId id(idx);
   if(id.subdetId() == MuonSubdetId::DT){
     DTChamberId chamberId(id.rawId());
-  
+    
     int iResidual = -1;
-
+    
     int n_station=9999;
     int n_wheel=9999;
     int n_sector=9999;
@@ -769,7 +769,7 @@ void MuonResidualsFitter::fiducialCuts(unsigned int id,double xMin, double xMax,
 
     if(chamberID.station()==4){
       chambw    = (*r)[15];
-      chambl    = (*r)[16];}
+      chambl    = (*r)[16];
     else{
       chambw    = (*r)[13];
       chambl    = (*r)[14];
@@ -840,7 +840,6 @@ void MuonResidualsFitter::fiducialCuts(unsigned int id,double xMin, double xMax,
     // 	  }
     // 	}
   }
-
 }
 
 void MuonResidualsFitter::correctBField(int idx_momentum, int idx_q)
